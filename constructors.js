@@ -11,13 +11,23 @@
  * @method   getDetails
  */
 
-  /**
-   * Returns a string of all of the spell's details.
-   * The format doesn't matter, as long as it contains the spell name, cost, and description.
-   *
-   * @name getDetails
-   * @return {string} details containing all of the spells information.
-   */
+function Spell(name, cost, description) {
+  this.name = name;
+  this.cost = cost;
+  this.description = description;
+}
+
+/**
+ * Returns a string of all of the spell's details.
+ * The format doesn't matter, as long as it contains the spell name, cost, and description.
+ *
+ * @name getDetails
+ * @return {string} details containing all of the spells information.
+ */
+
+Spell.prototype.getDetails = function() {
+  return "Spell: " + this.name + ", Cost: " + this.cost + ", Description: " + this.description;
+}
 
 /**
  * A spell that deals damage.
@@ -44,6 +54,13 @@
  * @property {string} description
  */
 
+function DamageSpell(name, cost, damage, description) {
+  this.damage = damage;
+  Spell.call(this, name, cost, description);
+}
+
+DamageSpell.prototype = Object.create(Spell.prototype);
+
 /**
  * Now that you've created some spells, let's create
  * `Spellcaster` objects that can use them!
@@ -61,6 +78,13 @@
  * @method  invoke
  */
 
+function Spellcaster(name, health, mana) {
+  this.name = name;
+  this.health = health;
+  this.mana = mana;
+  this.isAlive = true;
+}
+
   /**
    * @method inflictDamage
    *
@@ -72,6 +96,15 @@
    * @param  {number} damage  Amount of damage to deal to the spellcaster
    */
 
+  Spellcaster.prototype.inflictDamage = function(damage) {
+    if (this.health <= damage) { // if health is less than damage being passed in
+      this.isAlive = false;
+      this.health = 0;
+    } else {
+      this.health -= damage;
+    }
+  }
+
   /**
    * @method spendMana
    *
@@ -81,6 +114,15 @@
    * @param  {number} cost      The amount of mana to spend.
    * @return {boolean} success  Whether mana was successfully spent.
    */
+
+  Spellcaster.prototype.spendMana = function(cost) {
+    if (this.mana >= cost) {
+      this.mana -= cost;
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   /**
    * @method invoke
@@ -108,3 +150,19 @@
    * @param  {Spellcaster} target         The spell target to be inflicted.
    * @return {boolean}                    Whether the spell was successfully cast.
    */
+
+  Spellcaster.prototype.invoke = function(spell, target) {
+    if (spell instanceof Spell) { // if a Spell
+      
+      // check if spellcaster has enough mana to cast spell
+      // if () {
+        
+      // }
+
+      // mana - spell.cost
+
+
+    } else { // if not a Spell
+      return false;
+    }
+  }
