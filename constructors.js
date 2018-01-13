@@ -60,6 +60,7 @@ function DamageSpell(name, cost, damage, description) {
 }
 
 DamageSpell.prototype = Object.create(Spell.prototype);
+DamageSpell.prototype.constructor = DamageSpell;
 
 /**
  * Now that you've created some spells, let's create
@@ -153,16 +154,18 @@ function Spellcaster(name, health, mana) {
 
   Spellcaster.prototype.invoke = function(spell, target) {
     if (spell instanceof Spell) { // if a Spell
-      
-      // check if spellcaster has enough mana to cast spell
-      // if () {
-        
-      // }
 
-      // mana - spell.cost
-
-
-    } else { // if not a Spell
-      return false;
+      if (spell instanceof DamageSpell && !(target instanceof Spellcaster)) { // if DamageSpell and target not a Spellcaster
+        return false;
+      }
+      // if DamageSpell and target is a Spellcaster
+      if (this.spendMana(spell.cost)) { // check if spellcaster has enough mana to cast spell
+        if (spell instanceof DamageSpell) {
+          target.inflictDamage(spell.damage);
+        }
+        return true;
+      } 
     }
+    return false;
   }
+  
